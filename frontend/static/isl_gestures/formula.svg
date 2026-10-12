@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bg_formula" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#9333EA" stop-opacity="0.25"/>
+    </linearGradient>
+    <filter id="shadow_formula" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Card Background -->
+  <rect x="4" y="4" width="192" height="192" rx="16" fill="url(#bg_formula)" stroke="#A855F7" stroke-width="2"/>
+  
+  <!-- Category Badge -->
+  <rect x="12" y="12" width="75" height="18" rx="9" fill="#9333EA"/>
+  <text x="49" y="24" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="9" font-weight="bold" text-anchor="middle">MATH</text>
+
+  <!-- ISL Badge -->
+  <rect x="145" y="12" width="42" height="18" rx="9" fill="#10B981"/>
+  <text x="166" y="24" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="9" font-weight="bold" text-anchor="middle">ISL</text>
+
+  <!-- Central Hand Gesture Visualization -->
+  <g transform="translate(100, 95)" filter="url(#shadow_formula)">
+    <!-- Hand Palm & Wrist -->
+    <ellipse cx="0" cy="18" rx="28" ry="32" fill="#FBBF24" stroke="#D97706" stroke-width="2.5"/>
+    <rect x="-18" y="40" width="36" height="24" rx="6" fill="#F59E0B" stroke="#B45309" stroke-width="2"/>
+    
+    <!-- Finger Archetype / Representation -->
+    <path d="M -15,10 C -25,-10 -15,-28 -2,-28 C 10,-28 15,-10 6,2 L 12,-30 L 18,-28 L 15,5 Z" fill="#FDE68A" stroke="#D97706" stroke-width="2.5" stroke-linejoin="round"/>
+    
+    <!-- Motion Arrow indicator -->
+    <path d="M -35,5 Q -45,-15 -25,-25" fill="none" stroke="#A855F7" stroke-width="3" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+    <polygon points="-25,-25 -32,-20 -24,-17" fill="#A855F7"/>
+  </g>
+
+  <!-- Term Label -->
+  <rect x="10" y="142" width="180" height="46" rx="8" fill="#1E293B" fill-opacity="0.9"/>
+  <text x="100" y="162" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">FORMULA</text>
+  <text x="100" y="178" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="9" text-anchor="middle">F-hand writing equation across c</text>
+</svg>

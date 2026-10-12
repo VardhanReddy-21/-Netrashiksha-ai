@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetraShiksha AI - Multilingual Assistive Classroom</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁️</text></svg>">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-block">
+        <div class="brand-icon">👁️</div>
+        <div class="brand-title">
+          <h1>NetraShiksha AI <span style="font-size:0.95rem; font-weight:normal; color:#60A5FA;">(नेत्रशिक्षा AI)</span></h1>
+          <p data-i18n="brandSubtitle">Simple Assistive Classroom for Visually and Hearing Impaired Students</p>
+        </div>
+      </div>
+
+      <!-- Quick Accessibility Toolbar -->
+      <div class="control-pills">
+        <!-- Interactive State & GPS Selector -->
+        <select id="state-select" class="select-pill location-pill" title="Auto GPS / Select Your State" onchange="manuallySetState(this.value)">
+          <option value="Telangana">📍 Telangana (తెలుగు)</option>
+          <option value="Andhra Pradesh">📍 Andhra Pradesh (తెలుగు)</option>
+          <option value="Karnataka">📍 Karnataka (ಕನ್ನಡ)</option>
+          <option value="Tamil Nadu">📍 Tamil Nadu (தமிழ்)</option>
+          <option value="Maharashtra">📍 Maharashtra (मराठी)</option>
+          <option value="Odisha">📍 Odisha (ଓଡ଼ିଆ)</option>
+          <option value="Assam">📍 Assam (অসমীয়া)</option>
+          <option value="North India (Delhi/UP/MP)">📍 North India (हिन्दी)</option>
+        </select>
+
+        <!-- Language Selector for 8 Indian Languages -->
+        <select id="lang-select" class="select-pill" title="Choose Spoken Language" onchange="onLanguageDropdownChange(this.value)">
+          <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+          <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+          <option value="en">🌐 English (Pan-India)</option>
+          <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+          <option value="mr">🇮🇳 मराठी (Marathi)</option>
+          <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+          <option value="or">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+          <option value="as">🇮🇳 অসমীয়া (Assamese)</option>
+        </select>
+
+        <!-- Theme Selector -->
+        <select id="theme-select" class="select-pill" title="Display Theme">
+          <option value="default">🌙 Dark Mode</option>
+          <option value="theme-high-contrast-yellow">🟡 Low Vision: Yellow on Black (AAA)</option>
+          <option value="theme-whiteboard-inverted">☀️ Light Whiteboard</option>
+        </select>
+
+        <button class="btn-pill" onclick="adjustFontSize(-2)" title="Smaller Text">A-</button>
+        <button class="btn-pill" onclick="adjustFontSize(2)" title="Larger Text">A+</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-wrapper">
+
+    <!-- 3 Big Friendly Mode Cards -->
+    <div class="mode-selector-grid">
+      
+      <!-- Mode 1 Button -->
+      <div class="mode-card-btn active mode-netra" id="tab-btn-netra" onclick="selectMode('netra')">
+        <div class="mode-badge-icon">👁️</div>
+        <div class="mode-text">
+          <h3 data-i18n="mode1Title">1. Blind & Low Vision</h3>
+          <p data-i18n="mode1Desc">Hear blackboard notes, formulas & diagrams aloud</p>
+        </div>
+      </div>
+
+      <!-- Mode 2 Button -->
+      <div class="mode-card-btn mode-shiksha" id="tab-btn-shiksha" onclick="selectMode('shiksha')">
+        <div class="mode-badge-icon">🤟</div>
+        <div class="mode-text">
+          <h3 data-i18n="mode2Title">2. Deaf & Hearing Impaired</h3>
+          <p data-i18n="mode2Desc">Read live subtitles & watch Sign Language</p>
+        </div>
+      </div>
+
+      <!-- Mode 3 Button -->
+      <div class="mode-card-btn mode-exam" id="tab-btn-exam" onclick="selectMode('exam')">
+        <div class="mode-badge-icon">🎙️</div>
+        <div class="mode-text">
+          <h3 data-i18n="mode3Title">3. Voice Exam Scribe</h3>
+          <p data-i18n="mode3Desc">Speak your answers aloud — AI writes & grades</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Audio Player Bar -->
+    <div class="audio-notice-bar">
+      <div class="audio-notice-text">
+        <span style="font-size:1.3rem;">🔊</span>
+        <span id="audio-playback-status" data-i18n="audioReady">Audio ready. Click any Play button or press Spacebar.</span>
+      </div>
+      <button class="btn-secondary-action" onclick="toggleAudioPlayback()" data-i18n="btnPausePlay">⏯️ Pause / Play</button>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- PANEL 1: BLIND & LOW VISION MODE (NETRA) -->
+    <!-- ======================================================== -->
+    <section id="panel-netra" class="mode-panel active">
+      
+      <!-- Step 1: Choose a Lesson -->
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title" data-i18n="step1Title">Choose a Lesson to Learn</div>
+          <div class="step-subtitle" data-i18n="step1Sub">Click any lesson below to load the blackboard and audio notes instantly</div>
+        </div>
+      </div>
+
+      <div class="lesson-picker-grid">
+        <div class="lesson-chip-btn active" id="chip-physics" onclick="chooseLesson('physics_chalkboard')">
+          <div class="lesson-chip-icon">📐</div>
+          <div class="lesson-chip-text">
+            <strong data-i18n="lessonPhysics">Physics</strong>
+            <span data-i18n="lessonPhysicsSub">Force & Motion</span>
+          </div>
+        </div>
+
+        <div class="lesson-chip-btn" id="chip-math" onclick="chooseLesson('math_whiteboard')">
+          <div class="lesson-chip-icon">🔢</div>
+          <div class="lesson-chip-text">
+            <strong data-i18n="lessonMath">Mathematics</strong>
+            <span data-i18n="lessonMathSub">Quadratic & Calculus</span>
+          </div>
+        </div>
+
+        <div class="lesson-chip-btn" id="chip-plant" onclick="chooseLesson('plant_cell_anatomy')">
+          <div class="lesson-chip-icon">🌿</div>
+          <div class="lesson-chip-text">
+            <strong data-i18n="lessonBio">Biology</strong>
+            <span data-i18n="lessonBioSub">Plant Cell Diagram</span>
+          </div>
+        </div>
+
+        <div class="lesson-chip-btn" id="chip-water" onclick="chooseLesson('water_molecule_chemistry')">
+          <div class="lesson-chip-icon">💧</div>
+          <div class="lesson-chip-text">
+            <strong data-i18n="lessonChem">Chemistry</strong>
+            <span data-i18n="lessonChemSub">Water Molecule</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: See and Listen -->
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title" data-i18n="step2Title">Listen to Notes & See the Board</div>
+          <div class="step-subtitle" data-i18n="step2Sub">Our AI reads chalk handwriting and math formulas in natural spoken words</div>
+        </div>
+      </div>
+
+      <div class="two-col-split">
+        
+        <!-- Left Column: The Board Image -->
+        <div class="app-card">
+          <div class="card-top-bar">
+            <h3 data-i18n="boardTitle">📷 Classroom Board</h3>
+            <div style="display:flex; gap:0.4rem;">
+              <button class="btn-secondary-action view-btn active" id="btn-view-segmented" onclick="setImageView('segmented')" data-i18n="btnViewClear">✨ Clear View</button>
+              <button class="btn-secondary-action view-btn" id="btn-view-original" onclick="setImageView('original')" data-i18n="btnViewOrig">📷 Original</button>
+            </div>
+          </div>
+
+          <div class="board-viewer-box">
+            <img id="board-preview-img" src="" alt="Classroom Blackboard">
+          </div>
+
+          <!-- Quick Audio Action Buttons -->
+          <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.5rem;">
+            <button class="btn-primary-action" onclick="readAloudBoard('all')" data-i18n="btnPlayFull">
+              ▶️ Play Full Audio Lesson
+            </button>
+            <button class="btn-secondary-action" onclick="readAloudBoard('formulas')" data-i18n="btnFormulasOnly">
+              📐 Read Formulas Only
+            </button>
+            <button class="btn-secondary-action" onclick="readAloudBoard('homework')" data-i18n="btnHomeworkOnly">
+              📝 Read Homework
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Notes & Spoken Formulas -->
+        <div class="app-card">
+          <div class="card-top-bar">
+            <h3 data-i18n="notesTitle">📝 Lesson Notes & Formulas</h3>
+            <span id="board-classification-badge" class="location-pill" style="font-size:0.75rem;">Loading...</span>
+          </div>
+
+          <div id="board-sections-container" style="max-height:380px; overflow-y:auto; padding-right:0.3rem;">
+            <!-- Populated by JavaScript in active language -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Step 3: Ask Any Question -->
+      <div class="app-card">
+        <div class="card-top-bar">
+          <h3 data-i18n="step3Title">🎙️ Step 3: Have a Question? Ask the Board!</h3>
+          <span style="font-size:0.8rem; color:var(--text-secondary);" data-i18n="step3Sub">Ask about any formula, homework, or diagram</span>
+        </div>
+
+        <div class="ask-input-row">
+          <input type="text" id="qa-text-input" class="ask-input" data-i18n-placeholder="qaPlaceholder" placeholder="Type or click Speak: e.g. 'What is the formula for force?' or 'What is homework?'">
+          <button class="btn-primary-action" onclick="submitBoardQA()" data-i18n="btnAsk">Ask Question</button>
+          <button class="btn-secondary-action" onclick="startMicQA()" data-i18n="btnSpeak">🎤 Speak</button>
+        </div>
+
+        <!-- Quick Question Suggestions -->
+        <div class="quick-ask-pills">
+          <span style="font-size:0.75rem; color:var(--text-secondary); align-self:center;" data-i18n="tryAsking">Try asking:</span>
+          <button class="quick-ask-btn" onclick="quickAsk('What is the homework on the board?')" data-i18n="quickHomework">📝 What is the homework?</button>
+          <button class="quick-ask-btn" onclick="quickAsk('Explain the formula for kinetic energy')" data-i18n="quickKinetic">📐 Explain kinetic energy</button>
+          <button class="quick-ask-btn" onclick="quickAsk('What is the quadratic formula?')" data-i18n="quickQuadratic">🔢 What is quadratic formula?</button>
+          <button class="quick-ask-btn" onclick="quickAsk('Where is the nucleus in the cell?')" data-i18n="quickNucleus">🌿 Where is the nucleus?</button>
+        </div>
+
+        <!-- Answer Card -->
+        <div id="qa-answer-box" style="margin-top:0.85rem;"></div>
+      </div>
+
+      <!-- Step 4: Diagram Audio Tour -->
+      <div class="app-card">
+        <div class="card-top-bar">
+          <h3 data-i18n="step4Title">🎧 Step 4: Spatial Audio Diagram Explainer</h3>
+          <div style="display:flex; gap:0.4rem;">
+            <button class="btn-secondary-action" onclick="loadDiagramTour('plant_cell')" data-i18n="btnPlantCell">🌿 Plant Cell</button>
+            <button class="btn-secondary-action" onclick="loadDiagramTour('water_molecule')" data-i18n="btnWaterMolecule">💧 Water Molecule</button>
+          </div>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.75rem;" data-i18n="step4Sub">
+          For blind students: Click below to hear a spatial audio walkthrough that explains where each part is located.
+        </p>
+        <div id="diagram-tour-container"></div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- PANEL 2: DEAF & HEARING IMPAIRED MODE (SHIKSHA) -->
+    <!-- ======================================================== -->
+    <section id="panel-shiksha" class="mode-panel">
+      
+      <div class="two-col-split">
+        
+        <!-- Left: Live Subtitles & Technical Words -->
+        <div class="app-card">
+          <div class="card-top-bar">
+            <h3 data-i18n="shikshaStep1Title">💬 Step 1: Live Lecture Subtitles</h3>
+            <span class="location-pill" style="font-size:0.75rem;">Real-Time</span>
+          </div>
+
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.6rem;" data-i18n="shikshaStep1Sub">
+            The teacher's speech is displayed below. Hard science words are highlighted in blue—click any word to see what it means in simple English!
+          </p>
+
+          <textarea id="lecture-transcript-input" rows="3" style="width:100%; background:var(--bg-surface); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.65rem; font-size:0.9rem; margin-bottom:0.6rem;">Today in biology, we explore photosynthesis in the chloroplast, and how mitochondria produces energy. Then in physics, we calculate acceleration and kinetic energy.</textarea>
+
+          <div style="display:flex; gap:0.5rem; margin-bottom:0.85rem; flex-wrap:wrap;">
+            <button class="btn-primary-action" onclick="transcribeLectureText()" data-i18n="btnShowSubtitles">
+              ✍️ Show Subtitles & Words
+            </button>
+            <button class="btn-secondary-action" onclick="translateToISL('photosynthesis')">
+              🤟 Sign: Photosynthesis
+            </button>
+            <button class="btn-secondary-action" onclick="translateToISL('mitochondria')">
+              🤟 Sign: Mitochondria
+            </button>
+          </div>
+
+          <div class="teleprompter-box">
+            <div id="live-transcript-box" data-i18n="subtitlesPlaceholder">
+              Subtitles will appear here. Click 'Show Subtitles & Words' to see interactive words.
+            </div>
+          </div>
+
+          <!-- Jargon Tooltip Card -->
+          <div id="jargon-tooltip-card"></div>
+        </div>
+
+        <!-- Right: Indian Sign Language (ISL) Visual Interpreter -->
+        <div class="app-card">
+          <div class="card-top-bar">
+            <h3 data-i18n="shikshaStep2Title">🤟 Step 2: Indian Sign Language (ISL)</h3>
+            <span class="location-pill" style="background:rgba(59,130,246,0.15); border-color:#3B82F6; color:#60A5FA; font-size:0.75rem;">ISL Standard</span>
+          </div>
+
+          <div id="isl-display-stage" class="isl-card-stage">
+            <img src="/static/isl_gestures/hello.svg" class="isl-card-img" alt="ISL Sign">
+            <div style="margin-top:0.75rem;">
+              <h3 style="color:var(--text-primary); font-size:1.1rem;">ISL Sign: HELLO</h3>
+              <p style="font-size:0.8rem; color:var(--accent-cyan); font-weight:700;">Sign 1 of 1</p>
+            </div>
+          </div>
+
+          <!-- Controls for ISL -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.85rem; flex-wrap:wrap; gap:0.5rem;">
+            <button class="btn-primary-action" style="font-size:0.82rem;" onclick="playISLSequence()" data-i18n="btnPlayAllSigns">
+              ▶️ Play All Signs
+            </button>
+            <div style="display:flex; gap:0.4rem;">
+              <button class="btn-secondary-action" onclick="prevISLStep()" data-i18n="btnPrev">◀ Prev</button>
+              <button class="btn-secondary-action" onclick="nextISLStep()" data-i18n="btnNext">Next ▶</button>
+            </div>
+          </div>
+
+          <div id="isl-timeline-chips" class="isl-timeline-strip">
+            <!-- Chips rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Step 3: Quick Flashcards for Revision -->
+      <div class="app-card">
+        <div class="card-top-bar">
+          <h3 data-i18n="shikshaStep3Title">💡 Step 3: Quick Revision Flashcards</h3>
+          <span style="font-size:0.8rem; color:var(--text-secondary);" data-i18n="shikshaStep3Sub">Click any card to flip and check the answer</span>
+        </div>
+        <div id="flashcards-container" class="flashcard-deck">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- PANEL 3: VOICE EXAM SCRIBE MODE -->
+    <!-- ======================================================== -->
+    <section id="panel-exam" class="mode-panel">
+      
+      <div class="two-col-split">
+        
+        <!-- Left: Questions -->
+        <div class="app-card">
+          <div class="card-top-bar">
+            <h3 data-i18n="examStep1Title">📄 Step 1: Exam Question Paper</h3>
+            <span class="location-pill" style="font-size:0.75rem;">Class XII CBSE</span>
+          </div>
+
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.75rem;" data-i18n="examStep1Sub">
+            Click <strong>'Listen'</strong> to hear any question read aloud. Then click <strong>'Answer This'</strong> to dictate your reply.
+          </p>
+
+          <div id="exam-questions-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Right: Speak Answer & Grade -->
+        <div class="app-card">
+          <div class="card-top-bar">
+            <h3 id="active-exam-question-label" data-i18n="examStep2Title">🎙️ Step 2: Speak Your Answer</h3>
+            <span class="location-pill" style="background:rgba(239,68,68,0.15); border-color:#EF4444; color:#FCA5A5; font-size:0.75rem;">Voice Scribe</span>
+          </div>
+
+          <input type="hidden" id="active-q-id" value="1">
+
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.6rem;" data-i18n="examStep2Sub">
+            Click <strong>'Press Mic to Speak'</strong> and speak your answer. Formulas like <em>"force equals mass times acceleration"</em> will automatically convert into F = m · a.
+          </p>
+
+          <textarea id="exam-dictated-text" rows="5" class="ask-input" style="width:100%; margin-bottom:0.75rem;" data-i18n-placeholder="examPlaceholder" placeholder="Click 'Press Mic to Speak' or type your answer here..."></textarea>
+
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn-primary-action" onclick="submitExamDictation()" data-i18n="btnSubmitGrade">
+              ✅ Submit & Grade My Answer
+            </button>
+            <button class="btn-secondary-action" onclick="startMicExamDictation()" data-i18n="btnPressMic">
+              🎙️ Press Mic to Speak
+            </button>
+          </div>
+
+          <!-- Evaluation Card -->
+          <div id="exam-evaluation-result"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Include Translations dictionary first, then App logic -->
+  <script src="/static/js/translations.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

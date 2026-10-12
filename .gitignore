@@ -1,0 +1,30 @@
+﻿# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# Virtual Environments
+venv/
+env/
+.venv/
+ENV/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Unit test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs and databases
+*.log
+data/audio_cache/*.mp3
+!data/audio_cache/.gitkeep
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
