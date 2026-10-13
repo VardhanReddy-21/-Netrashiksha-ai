@@ -6,6 +6,7 @@
 [![Indian Sign Language](https://img.shields.io/badge/Accessibility-ISL%20Sign%20Cards-3B82F6.svg?style=flat)](https://github.com)
 [![WCAG 2.1 AAA](https://img.shields.io/badge/Standard-WCAG%202.1%20AAA-10B981.svg?style=flat)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![Languages](https://img.shields.io/badge/Languages-8%20Indian%20Languages-F59E0B.svg?style=flat)](https://github.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
@@ -119,3 +120,9 @@ python tests/test_live_server.py
 - **Rights of Persons with Disabilities (RPwD) Act 2016 (India)**
 - **National Education Policy (NEP) 2020 (Chapter 6 - Inclusive Education)**
 - **W3C Web Content Accessibility Guidelines (WCAG) 2.1 Level AAA**
+
+---
+
+## 📄 License
+This project is licensed under the [MIT License](LICENSE).
+
